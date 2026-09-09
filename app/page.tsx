@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
@@ -317,7 +317,7 @@ export default function Home() {
             <h2 className={`text-sm font-bold flex items-center gap-1.5 ${
               userPlan.isPro ? "text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]" : "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]"
             }`}>
-              {userPlan.isPro ? "ðŸŸ¢ Live Notion API Request" : "ðŸŸ¡ Demo Notion API Request"}
+              {userPlan.isPro ? "<span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] mr-2"></span>Live Notion API Request" : "ðŸŸ¡ Demo Notion API Request"}
             </h2>
             <span className="text-[11px] text-gray-400">
               {userPlan.isPro ? "Production Endpoint (Unlimited Access)" : `Testing Sandbox (${userPlan.freeLeft} free left)`}
