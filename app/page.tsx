@@ -111,7 +111,7 @@ export default function Home() {
 
     const params = new URLSearchParams(window.location.search);
     if (params.get("payment") === "success") {
-      const planName = params.get("plan") ? `${params.get("plan").toUpperCase()} Pro Active` : "Pro Active";
+      const planName = params.get("plan") ? `${(params.get("plan") || "").toUpperCase()} Pro Active` : "Pro Active";
       let existingKey = "LIVE_PRO_KEY_" + Math.random().toString(36).substring(2, 10).toUpperCase();
       if (saved) {
         try {
@@ -317,7 +317,7 @@ export default function Home() {
             <h2 className={`text-sm font-bold flex items-center gap-1.5 ${
               userPlan.isPro ? "text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]" : "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]"
             }`}>
-              {userPlan.isPro ? "🟢 Live Notion API Request" : "🟡 Demo Notion API Request"}
+              {userPlan.isPro ? "ðŸŸ¢ Live Notion API Request" : "ðŸŸ¡ Demo Notion API Request"}
             </h2>
             <span className="text-[11px] text-gray-400">
               {userPlan.isPro ? "Production Endpoint (Unlimited Access)" : `Testing Sandbox (${userPlan.freeLeft} free left)`}
@@ -371,7 +371,7 @@ export default function Home() {
                 }}
                 className="px-4 py-2 bg-[#1f0b3b] hover:bg-[#2c1252] border border-purple-600/40 text-xs font-semibold rounded-xl whitespace-nowrap transition text-purple-200"
               >
-                {urlCopied ? "Copied! ✅" : "Copy URL"}
+                {urlCopied ? "Copied! âœ…" : "Copy URL"}
               </button>
             </div>
           </div>
@@ -394,7 +394,7 @@ export default function Home() {
                   }}
                   className="text-xs px-2.5 py-1 bg-emerald-950/80 border border-emerald-500 text-emerald-300 rounded font-mono hover:bg-emerald-900 transition"
                 >
-                  {jsonCopied ? "Copied! ✅" : "📋 Copy JSON"}
+                  {jsonCopied ? "Copied! âœ…" : "ðŸ“‹ Copy JSON"}
                 </button>
               </div>
               <div className="max-h-60 overflow-y-auto">
@@ -410,7 +410,7 @@ export default function Home() {
             Select Your Pro Access Plan
           </h2>
           <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">
-            INSTANT ACTIVATION • HIGH PERFORMANCE LIVE ENDPOINTS • SECURE CHECKOUT
+            INSTANT ACTIVATION â€¢ HIGH PERFORMANCE LIVE ENDPOINTS â€¢ SECURE CHECKOUT
           </p>
         </div>
 
@@ -437,7 +437,7 @@ export default function Home() {
                 <ul className="text-[11px] text-gray-300 space-y-1.5 text-left pl-1">
                   {plan.features.map((feat, idx) => (
                     <li key={idx} className="flex items-center gap-1.5">
-                      <span className="text-emerald-400 font-bold">✓</span> {feat}
+                      <span className="text-emerald-400 font-bold">âœ“</span> {feat}
                     </li>
                   ))}
                 </ul>
@@ -459,10 +459,10 @@ export default function Home() {
         <footer className="text-center text-[11px] text-gray-500 pt-2 pb-4 space-y-1">
           <div className="flex justify-center gap-4 text-gray-400 text-[11px]">
             <a href="#" className="hover:underline">Terms of Service & Refund Policy</a>
-            <span>•</span>
+            <span>â€¢</span>
             <a href="mailto:developerappwebsite@gmail.com" className="hover:underline">Developer Support</a>
           </div>
-          <p>© 2026 NotionEngine Inc. Built for technical teams and SaaS founders.</p>
+          <p>Â© 2026 NotionEngine Inc. Built for technical teams and SaaS founders.</p>
         </footer>
 
       </div>
