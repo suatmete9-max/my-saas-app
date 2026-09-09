@@ -101,15 +101,22 @@ export default function Home() {
   ];
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(window.location.search);
+    const savedPlan = localStorage.getItem("user_plan");
+    if (savedPlan) {
+      setUserPlan(JSON.parse(savedPlan));
+    }
     if (params.get("payment") === "success") {
+      const planName = params.get("plan") ? `${params.get("plan").toUpperCase()} Pro Active` : "Pro Active";
       const generatedProKey = "LIVE_PRO_KEY_" + Math.random().toString(36).substring(2, 10).toUpperCase();
-      setUserPlan({
-        name: "Pro Active",
+      const newPlan = {
+        name: planName,
         apiKey: generatedProKey,
         isPro: true,
-        freeLeft: 9999,
-      });
+        freeLeft: 999999,
+      };
+      setUserPlan(newPlan);
+      localStorage.setItem("user_plan", JSON.stringify(newPlan));
     }
   }, []);
 
@@ -298,11 +305,11 @@ export default function Home() {
         {/* DEMO NOTION API REQUEST */}
         <div className="max-w-4xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_35px_rgba(147,51,234,0.15)] space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-sm font-bold text-amber-400 flex items-center gap-1.5 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]">
-              🟡 Demo Notion API Request
+            <h2 className="text-sm font-bold {userPlan.isPro ? "text-emerald-400 flex items-center gap-1.5" : "text-amber-400 flex items-center gap-1.5"} drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]">
+              ðŸŸ¡ Demo Notion API Request
             </h2>
             <span className="text-[11px] text-gray-400">
-              Testing Sandbox ({userPlan.freeLeft} free left)
+              {userPlan.isPro ? "Production Endpoint (Unlimited Access)" : `Testing Sandbox (${userPlan.freeLeft} free left)`}
             </span>
           </div>
 
@@ -342,7 +349,7 @@ export default function Home() {
                 }}
                 className="px-4 py-2 bg-[#1f0b3b] hover:bg-[#2c1252] border border-purple-600/40 text-xs font-semibold rounded-xl whitespace-nowrap transition text-purple-200"
               >
-                {urlCopied ? "Copied! ✅" : "Copy URL"}
+                {urlCopied ? "Copied! âœ…" : "Copy URL"}
               </button>
             </div>
           </div>
@@ -365,7 +372,7 @@ export default function Home() {
                   }}
                   className="text-xs px-2.5 py-1 bg-emerald-950/80 border border-emerald-500 text-emerald-300 rounded font-mono hover:bg-emerald-900 transition"
                 >
-                  {jsonCopied ? "Copied! ✅" : "📋 Copy JSON"}
+                  {jsonCopied ? "Copied! âœ…" : "ðŸ“‹ Copy JSON"}
                 </button>
               </div>
               <div className="max-h-60 overflow-y-auto">
@@ -381,7 +388,7 @@ export default function Home() {
             Select Your Pro Access Plan
           </h2>
           <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">
-            INSTANT ACTIVATION • HIGH PERFORMANCE LIVE ENDPOINTS • SECURE CHECKOUT
+            INSTANT ACTIVATION â€¢ HIGH PERFORMANCE LIVE ENDPOINTS â€¢ SECURE CHECKOUT
           </p>
         </div>
 
@@ -409,7 +416,7 @@ export default function Home() {
                 <ul className="text-[11px] text-gray-300 space-y-1.5 text-left pl-1">
                   {plan.features.map((feat, idx) => (
                     <li key={idx} className="flex items-center gap-1.5">
-                      <span className="text-emerald-400 font-bold">✓</span> {feat}
+                      <span className="text-emerald-400 font-bold">âœ“</span> {feat}
                     </li>
                   ))}
                 </ul>
@@ -431,10 +438,10 @@ export default function Home() {
         <footer className="text-center text-[11px] text-gray-500 pt-2 pb-4 space-y-1">
           <div className="flex justify-center gap-4 text-gray-400 text-[11px]">
             <a href="#" className="hover:underline">Terms of Service & Refund Policy</a>
-            <span>•</span>
+            <span>â€¢</span>
             <a href="mailto:developerappwebsite@gmail.com" className="hover:underline">Developer Support</a>
           </div>
-          <p>© 2026 NotionEngine Inc. Built for technical teams and SaaS founders.</p>
+          <p>Â© 2026 NotionEngine Inc. Built for technical teams and SaaS founders.</p>
         </footer>
 
       </div>
