@@ -1,14 +1,9 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
-export default clerkMiddleware({
-  publishableKey: 'pk_test_Y2hhbXBpb24tbW91c2UtOTA2NS5jbGVyay5hY2NvdW50cy5kZXYk',
-  secretKey: 'sk_test_ZeIP2q9EK78Z4PeC2OhAmUH9IQMtqVyvHEJRUHcnl1',
-  encryptionKey: 'my-super-secret-custom-key-12345',
-});
+export function middleware(request) {
+  return NextResponse.next();
+}
 
 export const config = {
-  matcher: [
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    '/(api|trpc)(.*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };
