@@ -111,7 +111,8 @@ export default function Home() {
 
     const params = new URLSearchParams(window.location.search);
     if (params.get("payment") === "success") {
-      const planName = params.get("plan") ? `${(params.get("plan") || "").toUpperCase()} Pro Active` : "Pro Active";
+      const rawPlan = params.get("plan");
+      const planName = rawPlan ? `${rawPlan.toUpperCase()} Pro Active` : "Pro Active";
       let existingKey = "LIVE_PRO_KEY_" + Math.random().toString(36).substring(2, 10).toUpperCase();
       if (saved) {
         try {
@@ -176,8 +177,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen text-white flex flex-col items-center justify-between px-4 py-8 sm:px-12 bg-[#05010a] relative overflow-hidden font-sans">
-      
-      {/* GEMINI MULTI-COLOR FLOWING AURORA */}
       <style jsx global>{`
         @keyframes geminiWaveFlow {
           0% { background-position: 0% 50%; }
@@ -246,8 +245,6 @@ export default function Home() {
       <div className="fixed bottom-[-10%] left-[25%] w-[650px] h-[650px] bg-gradient-to-r from-emerald-500/25 via-amber-400/25 to-teal-500/30 rounded-full blur-[160px] pointer-events-none -z-20 gemini-orb-3"></div>
 
       <div className="w-full max-w-5xl space-y-8 z-10 mx-auto my-auto">
-        
-        {/* HEADER */}
         <div className="text-center space-y-2 pt-2">
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight gemini-title-gradient drop-shadow-[0_0_35px_rgba(192,132,252,0.4)]">
             Notion to Live JSON API Engine
@@ -257,7 +254,6 @@ export default function Home() {
           </p>
         </div>
 
-        {/* AUTH STATUS */}
         <div className="max-w-xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_30px_rgba(147,51,234,0.15)] space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -311,13 +307,15 @@ export default function Home() {
           </div>
         </div>
 
-        {/* DYNAMIC API PANEL */}
         <div className="max-w-4xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_35px_rgba(147,51,234,0.15)] space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className={`text-sm font-bold flex items-center gap-1.5 ${
-              userPlan.isPro ? "text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]" : "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]"
-            }`}>
-              {userPlan.isPro ? "<span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] mr-2"></span>Live Notion API Request" : "ðŸŸ¡ Demo Notion API Request"}
+            <h2 className="text-sm font-bold flex items-center text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">
+              <span className={`inline-block w-2.5 h-2.5 rounded-full mr-2 shadow-[0_0_8px] ${
+                userPlan.isPro 
+                  ? "bg-emerald-400 shadow-emerald-400/80" 
+                  : "bg-amber-400 shadow-amber-400/80"
+              }`}></span>
+              {userPlan.isPro ? "Live Notion API Request" : "Demo Notion API Request"}
             </h2>
             <span className="text-[11px] text-gray-400">
               {userPlan.isPro ? "Production Endpoint (Unlimited Access)" : `Testing Sandbox (${userPlan.freeLeft} free left)`}
@@ -342,7 +340,6 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Custom Notion Token (For Tier-1 client private databases) */}
             <input
               type="password"
               value={customNotionKey}
@@ -371,7 +368,7 @@ export default function Home() {
                 }}
                 className="px-4 py-2 bg-[#1f0b3b] hover:bg-[#2c1252] border border-purple-600/40 text-xs font-semibold rounded-xl whitespace-nowrap transition text-purple-200"
               >
-                {urlCopied ? "Copied! âœ…" : "Copy URL"}
+                {urlCopied ? "Copied! ✅" : "Copy URL"}
               </button>
             </div>
           </div>
@@ -394,7 +391,7 @@ export default function Home() {
                   }}
                   className="text-xs px-2.5 py-1 bg-emerald-950/80 border border-emerald-500 text-emerald-300 rounded font-mono hover:bg-emerald-900 transition"
                 >
-                  {jsonCopied ? "Copied! âœ…" : "ðŸ“‹ Copy JSON"}
+                  {jsonCopied ? "Copied! ✅" : "📋 Copy JSON"}
                 </button>
               </div>
               <div className="max-h-60 overflow-y-auto">
@@ -404,13 +401,12 @@ export default function Home() {
           )}
         </div>
 
-        {/* PRICING SECTION */}
         <div className="text-center space-y-1 pt-6">
           <h2 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(217,70,239,0.35)]">
             Select Your Pro Access Plan
           </h2>
           <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">
-            INSTANT ACTIVATION â€¢ HIGH PERFORMANCE LIVE ENDPOINTS â€¢ SECURE CHECKOUT
+            INSTANT ACTIVATION • HIGH PERFORMANCE LIVE ENDPOINTS • SECURE CHECKOUT
           </p>
         </div>
 
@@ -437,7 +433,7 @@ export default function Home() {
                 <ul className="text-[11px] text-gray-300 space-y-1.5 text-left pl-1">
                   {plan.features.map((feat, idx) => (
                     <li key={idx} className="flex items-center gap-1.5">
-                      <span className="text-emerald-400 font-bold">âœ“</span> {feat}
+                      <span className="text-emerald-400 font-bold">✓</span> {feat}
                     </li>
                   ))}
                 </ul>
@@ -455,16 +451,14 @@ export default function Home() {
           ))}
         </div>
 
-        {/* FOOTER */}
         <footer className="text-center text-[11px] text-gray-500 pt-2 pb-4 space-y-1">
           <div className="flex justify-center gap-4 text-gray-400 text-[11px]">
             <a href="#" className="hover:underline">Terms of Service & Refund Policy</a>
-            <span>â€¢</span>
+            <span>•</span>
             <a href="mailto:developerappwebsite@gmail.com" className="hover:underline">Developer Support</a>
           </div>
-          <p>Â© 2026 NotionEngine Inc. Built for technical teams and SaaS founders.</p>
+          <p>© 2026 NotionEngine Inc. Built for technical teams and SaaS founders.</p>
         </footer>
-
       </div>
     </main>
   );
