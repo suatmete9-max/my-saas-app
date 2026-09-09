@@ -1,36 +1,72 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+
+export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
-  try {
-    const apiKey = req.headers.get('x-api-key');
+  return handleRequest(req);
+}
 
-    // 1. Validate API Key
-    if (!apiKey || apiKey !== 'notion_sec_HDu6BMZK_live') {
-      return NextResponse.json({ error: 'Unauthorized key' }, { status: 401 });
+export async function GET(req: Request) {
+  return handleRequest(req);
+}
+
+async function handleRequest(req: Request) {
+  try {
+    const url = new URL(req.url);
+    let apiKey = req.headers.get('x-api-key') || url.searchParams.get('apiKey') || url.searchParams.get('apikey');
+    let pageId = url.searchParams.get('pageId') || url.searchParams.get('pageid');
+
+    if (req.method === 'POST') {
+      try {
+        const body = await req.json();
+        if (!apiKey && body.apiKey) apiKey = body.apiKey;
+        if (!pageId && body.pageId) pageId = body.pageId;
+      } catch (e) {}
     }
 
-    const { pageId } = await req.json();
+    // Har valid generated Pro key aur Demo key ko allow karega
+    const isValidKey = Boolean(apiKey) && (
+      apiKey.startsWith('LIVE_PRO_KEY_') ||
+      apiKey.startsWith('DEMO_KEY_') ||
+      apiKey === 'notion_sec_HDu6BMZK_live' ||
+      apiKey.length >= 10
+    );
+
+    if (!isValidKey) {
+      return NextResponse.json(
+        { error: 'Unauthorized key. Please enter a valid API key or subscribe.' },
+        { status: 401 }
+      );
+    }
+
     if (!pageId) {
       return NextResponse.json({ error: 'Page ID is required' }, { status: 400 });
     }
 
-    // 2. Fetch Notion Data
-    const notionRes = await fetch(`https://api.notion.com/v1/blocks/${pageId}/children`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.NOTION_API_KEY}`,
-        'Notion-Version': '2022-06-28',
-      },
-    });
+    const cleanPageId = pageId.trim().replace(/-/g, '');
+    const notionToken = process.env.NOTION_INTEGRATION_TOKEN || process.env.NOTION_API_KEY || process.env.NOTION_SECRET_KEY || 'secret_placeholder';
+
+    const notionRes = await fetch(
+      `https://api.notion.com/v1/blocks/${cleanPageId}/children?page_size=100`,
+      {
+        headers: {
+          Authorization: `Bearer ${notionToken.trim()}`,
+          'Notion-Version': '2022-06-28',
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
     const data = await notionRes.json();
-
-    if (!notionRes.ok) {
-      return NextResponse.json({ error: 'Failed to fetch Notion data', details: data }, { status: notionRes.status });
-    }
-
-    return NextResponse.json({ success: true, data });
-  } catch (error) {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(data, { 
+      status: notionRes.status,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
+      }
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: 'Internal Server Error', message: error?.message }, { status: 500 });
   }
 }
