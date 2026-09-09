@@ -3,8 +3,22 @@
 import { useState, useEffect } from "react";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 
+interface PlanState {
+  name: string;
+  apiKey: string;
+  isPro: boolean;
+  freeLeft: number;
+}
+
+const DEFAULT_SANDBOX: PlanState = {
+  name: "Free Sandbox",
+  apiKey: "DEMO_KEY_sandbox_test",
+  isPro: false,
+  freeLeft: 3,
+};
+
 export default function Home() {
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn, user, isLoaded } = useUser();
   const [pageId, setPageId] = useState("3c8eb4df13cc80059700f7ea0db308c2");
   const [customNotionKey, setCustomNotionKey] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,18 +29,66 @@ export default function Home() {
   const [keyCopied, setKeyCopied] = useState(false);
   const [jsonCopied, setJsonCopied] = useState(false);
 
+  const [userPlan, setUserPlan] = useState<PlanState>(DEFAULT_SANDBOX);
+
+  // Persistent Pro state hydration
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("notion_saas_user_plan");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && parsed.apiKey) {
+          setUserPlan(parsed);
+        }
+      }
+    } catch {}
+
+    // Check payment confirmation in URL
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("payment") === "success") {
+        const planParam = params.get("plan") || "monthly";
+        const formattedName = `${planParam.toUpperCase()} Pro Active`;
+
+        // Check if existing key already exists to prevent random regenerations
+        let persistentKey = "";
+        try {
+          const prev = localStorage.getItem("notion_saas_user_plan");
+          if (prev) {
+            const p = JSON.parse(prev);
+            if (p.apiKey && p.apiKey.startsWith("LIVE_PRO_KEY_")) {
+              persistentKey = p.apiKey;
+            }
+          }
+        } catch {}
+
+        if (!persistentKey) {
+          persistentKey = "LIVE_PRO_KEY_" + Math.random().toString(36).substring(2, 10).toUpperCase();
+        }
+
+        const activatedPlan: PlanState = {
+          name: formattedName,
+          apiKey: persistentKey,
+          isPro: true,
+          freeLeft: 999999,
+        };
+
+        setUserPlan(activatedPlan);
+        localStorage.setItem("notion_saas_user_plan", JSON.stringify(activatedPlan));
+
+        // Clean query params from address bar without reloading
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+  }, []);
+
   const userEmail = isSignedIn && user?.primaryEmailAddress?.emailAddress 
     ? user.primaryEmailAddress.emailAddress 
-    : "Guest Sandbox User";
+    : (userPlan.isPro ? "subscriber@live.account" : "sandbox_guest@demo.com");
 
-  const userInitial = userEmail.charAt(0).toUpperCase() || "B";
-
-  const [userPlan, setUserPlan] = useState({
-    name: "Free Sandbox",
-    apiKey: "DEMO_KEY_sandbox_test",
-    isPro: false,
-    freeLeft: 3,
-  });
+  const userInitial = isSignedIn && user?.firstName 
+    ? user.firstName.charAt(0).toUpperCase() 
+    : (userEmail ? userEmail.charAt(0).toUpperCase() : "U");
 
   const pricingPlans = [
     {
@@ -100,39 +162,6 @@ export default function Home() {
       link: "https://notion-api-engine.lemonsqueezy.com/checkout/buy/46871f9e-b885-4160-9779-5976532df643",
     },
   ];
-
-  useEffect(() => {
-    const saved = localStorage.getItem("notion_saas_user_plan");
-    if (saved) {
-      try {
-        setUserPlan(JSON.parse(saved));
-      } catch {}
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("payment") === "success") {
-      const rawPlan = params.get("plan");
-      const planName = rawPlan ? `${rawPlan.toUpperCase()} Pro Active` : "Pro Active";
-      let existingKey = "LIVE_PRO_KEY_" + Math.random().toString(36).substring(2, 10).toUpperCase();
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (parsed.apiKey && parsed.apiKey.startsWith("LIVE_PRO_KEY_")) {
-            existingKey = parsed.apiKey;
-          }
-        } catch {}
-      }
-
-      const activePlan = {
-        name: planName,
-        apiKey: existingKey,
-        isPro: true,
-        freeLeft: 999999,
-      };
-      setUserPlan(activePlan);
-      localStorage.setItem("notion_saas_user_plan", JSON.stringify(activePlan));
-    }
-  }, []);
 
   const handleFetchJson = async () => {
     if (!pageId.trim()) {
@@ -254,6 +283,7 @@ export default function Home() {
           </p>
         </div>
 
+        {/* AUTH PANEL */}
         <div className="max-w-xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_30px_rgba(147,51,234,0.15)] space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -270,15 +300,15 @@ export default function Home() {
               </span>
               {!isSignedIn ? (
                 <SignInButton mode="modal">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 text-black font-extrabold flex items-center justify-center text-xs shadow-[0_0_15px_rgba(6,182,212,0.5)] cursor-pointer hover:scale-105 transition">
+                  <button className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 text-black font-extrabold flex items-center justify-center text-xs shadow-[0_0_15px_rgba(6,182,212,0.5)] cursor-pointer hover:scale-105 transition" title="Sign In">
                     {userInitial}
-                  </div>
+                  </button>
                 </SignInButton>
               ) : (
                 <SignOutButton>
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 text-black font-extrabold flex items-center justify-center text-xs shadow-[0_0_15px_rgba(6,182,212,0.5)] cursor-pointer hover:scale-105 transition" title="Sign Out">
+                  <button className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 text-black font-extrabold flex items-center justify-center text-xs shadow-[0_0_15px_rgba(6,182,212,0.5)] cursor-pointer hover:scale-105 transition" title="Sign Out">
                     {userInitial}
-                  </div>
+                  </button>
                 </SignOutButton>
               )}
             </div>
@@ -307,6 +337,7 @@ export default function Home() {
           </div>
         </div>
 
+        {/* API INTERACTION PANEL */}
         <div className="max-w-4xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_35px_rgba(147,51,234,0.15)] space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-sm font-bold flex items-center text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">
@@ -401,6 +432,7 @@ export default function Home() {
           )}
         </div>
 
+        {/* PRICING PLANS */}
         <div className="text-center space-y-1 pt-6">
           <h2 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(217,70,239,0.35)]">
             Select Your Pro Access Plan
