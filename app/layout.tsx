@@ -1,25 +1,10 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import './globals.css';
+import { ClerkProvider } from '@clerk/nextjs';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Notion to Live JSON API Engine | Realtime Database Endpoint",
-  description:
-    "Convert any Notion database into a sub-50ms live REST API endpoint. Instant JSON response for developers.",
-  openGraph: {
-    title: "Notion to Live JSON API Engine | Realtime Database Endpoint",
-    description:
-      "Convert any Notion database into a sub-50ms live REST API endpoint. Instant JSON response for developers.",
-    url: "https://my-saas-app-ten-nu.vercel.app",
-    siteName: "Notion API Engine",
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Notion to Live JSON API Engine | Realtime Database Endpoint",
-    description:
-      "Convert any Notion database into a sub-50ms live REST API endpoint. Instant JSON response for developers.",
-  },
+  title: 'Notion to Live JSON API Engine',
+  description: 'Convert Notion databases into high-performance JSON endpoints instantly.',
 };
 
 export default function RootLayout({
@@ -28,10 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="antialiased bg-slate-950 text-white min-h-screen">
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className="antialiased">{children}</body>
+      </html>
+    </ClerkProvider>
   );
 }
