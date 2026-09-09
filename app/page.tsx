@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
-import { SignInButton, SignOutButton, UserButton, useUser, useClerk } from "@clerk/nextjs";
+import { SignInButton, useUser, useClerk } from "@clerk/nextjs";
 
 interface PlanState {
   name: string;
@@ -31,71 +31,48 @@ export default function Home() {
   const [keyCopied, setKeyCopied] = useState(false);
   const [jsonCopied, setJsonCopied] = useState(false);
 
+  // Default always stays Sandbox (No fake bypass)
   const [userPlan, setUserPlan] = useState<PlanState>(SANDBOX_DEFAULT);
 
-  // Hydrate persistent license
   useEffect(() => {
+    // Only hydrate verified plan if explicitly exists
     try {
-      const saved = localStorage.getItem("notion_engine_license");
+      const saved = localStorage.getItem("notion_engine_verified_license");
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed && parsed.apiKey) {
+        if (parsed && parsed.isPro === true && parsed.apiKey) {
           setUserPlan(parsed);
         }
+      } else {
+        setUserPlan(SANDBOX_DEFAULT);
       }
-    } catch {}
+    } catch {
+      setUserPlan(SANDBOX_DEFAULT);
+    }
 
+    // Strip out any fake ?payment=success URL attempts
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      if (params.get("payment") === "success") {
-        const selectedPlan = params.get("plan") || "monthly";
-        const planTitle = `${selectedPlan.toUpperCase()} Pro Active`;
-
-        let persistentKey = "";
-        try {
-          const prev = localStorage.getItem("notion_engine_license");
-          if (prev) {
-            const p = JSON.parse(prev);
-            if (p.apiKey && p.apiKey.startsWith("LIVE_PRO_KEY_")) {
-              persistentKey = p.apiKey;
-            }
-          }
-        } catch {}
-
-        if (!persistentKey) {
-          persistentKey = "LIVE_PRO_KEY_" + Math.random().toString(36).substring(2, 10).toUpperCase();
-        }
-
-        const activePlan: PlanState = {
-          name: planTitle,
-          apiKey: persistentKey,
-          isPro: true,
-          freeLeft: 999999,
-        };
-
-        setUserPlan(activePlan);
-        localStorage.setItem("notion_engine_license", JSON.stringify(activePlan));
+      if (params.has("payment")) {
         window.history.replaceState({}, document.title, window.location.pathname);
       }
     }
   }, []);
 
   const handleLogoutAndReset = async () => {
-    try {
-      localStorage.removeItem("notion_engine_license");
-      setUserPlan(SANDBOX_DEFAULT);
-      if (isSignedIn) {
-        await signOut();
-      }
-      window.location.href = "/";
-    } catch {
-      window.location.reload();
+    localStorage.removeItem("notion_engine_verified_license");
+    localStorage.removeItem("notion_engine_license");
+    localStorage.removeItem("notion_saas_user_plan");
+    setUserPlan(SANDBOX_DEFAULT);
+    if (isSignedIn) {
+      await signOut();
     }
+    window.location.href = "/";
   };
 
   const userEmail = isSignedIn && user?.primaryEmailAddress?.emailAddress
     ? user.primaryEmailAddress.emailAddress
-    : (userPlan.isPro ? "subscriber@live.account" : "suatmete9@gmail.com");
+    : (userPlan.isPro ? "subscriber@live.account" : "guest_sandbox@notionengine.com");
 
   const pricingPlans = [
     {
@@ -307,23 +284,28 @@ export default function Home() {
                 {userPlan.name}
               </span>
 
-              {/* DEDICATED LOGOUT / SWITCH BUTTON */}
-              <button
-                onClick={handleLogoutAndReset}
-                title="Log out and reset session"
-                className="px-2.5 py-1 text-[11px] font-semibold bg-red-950/50 hover:bg-red-900/80 border border-red-500/40 text-red-300 rounded-lg transition"
-              >
-                Log Out
-              </button>
+              {userPlan.isPro && (
+                <button
+                  onClick={handleLogoutAndReset}
+                  className="px-2.5 py-1 text-[11px] font-semibold bg-red-950/50 hover:bg-red-900/80 border border-red-500/40 text-red-300 rounded-lg transition"
+                >
+                  Reset License
+                </button>
+              )}
 
-              {isSignedIn ? (
-                <UserButton afterSignOutUrl="/" />
-              ) : (
+              {!isSignedIn ? (
                 <SignInButton mode="modal">
                   <button className="px-3 py-1 text-xs font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-black rounded-lg shadow hover:opacity-90 transition">
                     Sign In
                   </button>
                 </SignInButton>
+              ) : (
+                <button
+                  onClick={handleLogoutAndReset}
+                  className="px-3 py-1 text-xs font-semibold bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg text-gray-200 transition"
+                >
+                  Log Out
+                </button>
               )}
             </div>
           </div>
@@ -351,10 +333,10 @@ export default function Home() {
           </div>
         </div>
 
-        {/* INTERACTION PANEL */}
+        {/* DEMO / LIVE PANEL */}
         <div className="max-w-4xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_35px_rgba(147,51,234,0.15)] space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-sm font-bold flex items-center text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">
+            <h2 className="text-sm font-bold flex items-center text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]">
               <span className={`inline-block w-2.5 h-2.5 rounded-full mr-2 shadow-[0_0_8px] ${
                 userPlan.isPro ? "bg-emerald-400 shadow-emerald-400/80" : "bg-amber-400 shadow-amber-400/80"
               }`}></span>
