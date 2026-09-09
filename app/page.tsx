@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignInButton, SignOutButton, UserButton, useUser, useClerk } from "@clerk/nextjs";
 
 interface PlanState {
   name: string;
@@ -19,6 +19,8 @@ const SANDBOX_DEFAULT: PlanState = {
 
 export default function Home() {
   const { isSignedIn, user, isLoaded } = useUser();
+  const { signOut } = useClerk();
+
   const [pageId, setPageId] = useState("3c8eb4df13cc80059700f7ea0db308c2");
   const [customNotionKey, setCustomNotionKey] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,7 +33,7 @@ export default function Home() {
 
   const [userPlan, setUserPlan] = useState<PlanState>(SANDBOX_DEFAULT);
 
-  // Hydrate and lock Pro status permanently across all refreshes
+  // Hydrate persistent license
   useEffect(() => {
     try {
       const saved = localStorage.getItem("notion_engine_license");
@@ -78,11 +80,22 @@ export default function Home() {
     }
   }, []);
 
+  const handleLogoutAndReset = async () => {
+    try {
+      localStorage.removeItem("notion_engine_license");
+      setUserPlan(SANDBOX_DEFAULT);
+      if (isSignedIn) {
+        await signOut();
+      }
+      window.location.href = "/";
+    } catch {
+      window.location.reload();
+    }
+  };
+
   const userEmail = isSignedIn && user?.primaryEmailAddress?.emailAddress
     ? user.primaryEmailAddress.emailAddress
     : (userPlan.isPro ? "subscriber@live.account" : "suatmete9@gmail.com");
-
-  const userInitial = userEmail.charAt(0).toUpperCase() || "B";
 
   const pricingPlans = [
     {
@@ -279,31 +292,38 @@ export default function Home() {
 
         {/* AUTH BOX */}
         <div className="max-w-xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_30px_rgba(147,51,234,0.15)] space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <div>
               <p className="text-[11px] text-gray-400 font-medium">Authenticated Account:</p>
               <p className="text-xs font-semibold text-cyan-300">{userEmail}</p>
             </div>
-            <div className="flex items-center gap-2.5">
-              <span className={`px-3.5 py-1 text-[11px] font-bold rounded-full border shadow-sm ${
+            
+            <div className="flex items-center gap-2">
+              <span className={`px-3 py-1 text-[11px] font-bold rounded-full border shadow-sm ${
                 userPlan.isPro 
-                  ? "bg-emerald-500/20 text-emerald-300 border-emerald-400/40" 
+                  ? "bg-emerald-500/20 text-emerald-300 border-emerald-400/40 shadow-[0_0_10px_rgba(52,211,153,0.2)]" 
                   : "bg-amber-500/15 text-amber-300 border-amber-500/40"
               }`}>
                 {userPlan.name}
               </span>
-              {!isSignedIn ? (
+
+              {/* DEDICATED LOGOUT / SWITCH BUTTON */}
+              <button
+                onClick={handleLogoutAndReset}
+                title="Log out and reset session"
+                className="px-2.5 py-1 text-[11px] font-semibold bg-red-950/50 hover:bg-red-900/80 border border-red-500/40 text-red-300 rounded-lg transition"
+              >
+                Log Out
+              </button>
+
+              {isSignedIn ? (
+                <UserButton afterSignOutUrl="/" />
+              ) : (
                 <SignInButton mode="modal">
-                  <button className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 text-black font-extrabold flex items-center justify-center text-xs shadow-[0_0_15px_rgba(6,182,212,0.5)] cursor-pointer hover:scale-105 transition" title="Sign In">
-                    {userInitial}
+                  <button className="px-3 py-1 text-xs font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-black rounded-lg shadow hover:opacity-90 transition">
+                    Sign In
                   </button>
                 </SignInButton>
-              ) : (
-                <SignOutButton>
-                  <button className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 text-black font-extrabold flex items-center justify-center text-xs shadow-[0_0_15px_rgba(6,182,212,0.5)] cursor-pointer hover:scale-105 transition" title="Sign Out">
-                    {userInitial}
-                  </button>
-                </SignOutButton>
               )}
             </div>
           </div>
