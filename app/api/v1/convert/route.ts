@@ -2,15 +2,10 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-export async function POST(req: Request) {
-  return handleConvert(req);
-}
+export async function POST(req: Request) { return handleRequest(req); }
+export async function GET(req: Request) { return handleRequest(req); }
 
-export async function GET(req: Request) {
-  return handleConvert(req);
-}
-
-async function handleConvert(req: Request) {
+async function handleRequest(req: Request) {
   try {
     const url = new URL(req.url);
     let apiKey = req.headers.get("x-api-key") || url.searchParams.get("apiKey") || url.searchParams.get("apikey");
@@ -21,7 +16,7 @@ async function handleConvert(req: Request) {
         const body = await req.json();
         if (!apiKey && body.apiKey) apiKey = body.apiKey;
         if (!pageId && body.pageId) pageId = body.pageId;
-      } catch (e) {}
+      } catch {}
     }
 
     if (!pageId) {
@@ -29,30 +24,21 @@ async function handleConvert(req: Request) {
     }
 
     const cleanPageId = pageId.trim().replace(/-/g, "");
-    const notionToken =
-      process.env.NOTION_INTEGRATION_TOKEN ||
-      process.env.NOTION_API_KEY ||
-      process.env.NOTION_SECRET_KEY;
+    const token = process.env.NOTION_INTEGRATION_TOKEN || process.env.NOTION_API_KEY || process.env.NOTION_SECRET_KEY || "";
 
-    if (!notionToken) {
-      return NextResponse.json(
-        { error: "Notion token not configured in server environment variables" },
-        { status: 500 }
-      );
+    if (!token) {
+      return NextResponse.json({ error: "NOTION_INTEGRATION_TOKEN is missing in environment variables." }, { status: 500 });
     }
 
-    const notionRes = await fetch(
-      `https://api.notion.com/v1/blocks/${cleanPageId}/children?page_size=100`,
-      {
-        headers: {
-          Authorization: `Bearer ${notionToken.trim()}`,
-          "Notion-Version": "2022-06-28",
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(`https://api.notion.com/v1/blocks/${cleanPageId}/children?page_size=100`, {
+      headers: {
+        Authorization: `Bearer ${token.trim()}`,
+        "Notion-Version": "2022-06-28",
+        "Content-Type": "application/json",
+      },
+    });
 
-    const text = await notionRes.text();
+    const text = await res.text();
     let data;
     try {
       data = JSON.parse(text);
@@ -61,14 +47,14 @@ async function handleConvert(req: Request) {
     }
 
     return NextResponse.json(data, {
-      status: notionRes.status,
+      status: res.status,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type, x-api-key",
       },
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: "Internal Server Error", message: error?.message }, { status: 500 });
+  } catch (err: any) {
+    return NextResponse.json({ error: "Internal Server Error", message: err?.message }, { status: 500 });
   }
 }
