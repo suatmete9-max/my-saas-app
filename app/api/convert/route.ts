@@ -24,15 +24,7 @@ async function handleRequest(req: Request) {
       } catch (e) {}
     }
 
-    // Har valid generated Pro key aur Demo key ko allow karega
-    const isValidKey = Boolean(apiKey) && (
-      apiKey.startsWith('LIVE_PRO_KEY_') ||
-      apiKey.startsWith('DEMO_KEY_') ||
-      apiKey === 'notion_sec_HDu6BMZK_live' ||
-      apiKey.length >= 10
-    );
-
-    if (!isValidKey) {
+    if (!apiKey) {
       return NextResponse.json(
         { error: 'Unauthorized key. Please enter a valid API key or subscribe.' },
         { status: 401 }
@@ -44,7 +36,17 @@ async function handleRequest(req: Request) {
     }
 
     const cleanPageId = pageId.trim().replace(/-/g, '');
-    const notionToken = process.env.NOTION_INTEGRATION_TOKEN || process.env.NOTION_API_KEY || process.env.NOTION_SECRET_KEY || 'secret_placeholder';
+    const notionToken =
+      process.env.NOTION_INTEGRATION_TOKEN ||
+      process.env.NOTION_API_KEY ||
+      process.env.NOTION_SECRET_KEY;
+
+    if (!notionToken) {
+      return NextResponse.json(
+        { error: 'Notion token not configured in environment variables' },
+        { status: 500 }
+      );
+    }
 
     const notionRes = await fetch(
       `https://api.notion.com/v1/blocks/${cleanPageId}/children?page_size=100`,
