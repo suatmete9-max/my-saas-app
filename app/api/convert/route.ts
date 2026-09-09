@@ -24,13 +24,6 @@ async function handleConvert(req: Request) {
       } catch (e) {}
     }
 
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: "Unauthorized key. Please enter a valid API key or subscribe." },
-        { status: 401 }
-      );
-    }
-
     if (!pageId) {
       return NextResponse.json({ error: "Page ID is required" }, { status: 400 });
     }
