@@ -10,7 +10,7 @@ interface PlanState {
   freeLeft: number;
 }
 
-const DEFAULT_SANDBOX: PlanState = {
+const SANDBOX_DEFAULT: PlanState = {
   name: "Free Sandbox",
   apiKey: "DEMO_KEY_sandbox_test",
   isPro: false,
@@ -29,31 +29,29 @@ export default function Home() {
   const [keyCopied, setKeyCopied] = useState(false);
   const [jsonCopied, setJsonCopied] = useState(false);
 
-  const [userPlan, setUserPlan] = useState<PlanState>(DEFAULT_SANDBOX);
+  const [userPlan, setUserPlan] = useState<PlanState>(SANDBOX_DEFAULT);
 
-  // Persistent Pro state hydration
+  // Hydrate and lock Pro status permanently across all refreshes
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("notion_saas_user_plan");
-      if (stored) {
-        const parsed = JSON.parse(stored);
+      const saved = localStorage.getItem("notion_engine_license");
+      if (saved) {
+        const parsed = JSON.parse(saved);
         if (parsed && parsed.apiKey) {
           setUserPlan(parsed);
         }
       }
     } catch {}
 
-    // Check payment confirmation in URL
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       if (params.get("payment") === "success") {
-        const planParam = params.get("plan") || "monthly";
-        const formattedName = `${planParam.toUpperCase()} Pro Active`;
+        const selectedPlan = params.get("plan") || "monthly";
+        const planTitle = `${selectedPlan.toUpperCase()} Pro Active`;
 
-        // Check if existing key already exists to prevent random regenerations
         let persistentKey = "";
         try {
-          const prev = localStorage.getItem("notion_saas_user_plan");
+          const prev = localStorage.getItem("notion_engine_license");
           if (prev) {
             const p = JSON.parse(prev);
             if (p.apiKey && p.apiKey.startsWith("LIVE_PRO_KEY_")) {
@@ -66,29 +64,25 @@ export default function Home() {
           persistentKey = "LIVE_PRO_KEY_" + Math.random().toString(36).substring(2, 10).toUpperCase();
         }
 
-        const activatedPlan: PlanState = {
-          name: formattedName,
+        const activePlan: PlanState = {
+          name: planTitle,
           apiKey: persistentKey,
           isPro: true,
           freeLeft: 999999,
         };
 
-        setUserPlan(activatedPlan);
-        localStorage.setItem("notion_saas_user_plan", JSON.stringify(activatedPlan));
-
-        // Clean query params from address bar without reloading
+        setUserPlan(activePlan);
+        localStorage.setItem("notion_engine_license", JSON.stringify(activePlan));
         window.history.replaceState({}, document.title, window.location.pathname);
       }
     }
   }, []);
 
-  const userEmail = isSignedIn && user?.primaryEmailAddress?.emailAddress 
-    ? user.primaryEmailAddress.emailAddress 
-    : (userPlan.isPro ? "subscriber@live.account" : "sandbox_guest@demo.com");
+  const userEmail = isSignedIn && user?.primaryEmailAddress?.emailAddress
+    ? user.primaryEmailAddress.emailAddress
+    : (userPlan.isPro ? "subscriber@live.account" : "suatmete9@gmail.com");
 
-  const userInitial = isSignedIn && user?.firstName 
-    ? user.firstName.charAt(0).toUpperCase() 
-    : (userEmail ? userEmail.charAt(0).toUpperCase() : "U");
+  const userInitial = userEmail.charAt(0).toUpperCase() || "B";
 
   const pricingPlans = [
     {
@@ -283,7 +277,7 @@ export default function Home() {
           </p>
         </div>
 
-        {/* AUTH PANEL */}
+        {/* AUTH BOX */}
         <div className="max-w-xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_30px_rgba(147,51,234,0.15)] space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -337,14 +331,12 @@ export default function Home() {
           </div>
         </div>
 
-        {/* API INTERACTION PANEL */}
+        {/* INTERACTION PANEL */}
         <div className="max-w-4xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_35px_rgba(147,51,234,0.15)] space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-sm font-bold flex items-center text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">
               <span className={`inline-block w-2.5 h-2.5 rounded-full mr-2 shadow-[0_0_8px] ${
-                userPlan.isPro 
-                  ? "bg-emerald-400 shadow-emerald-400/80" 
-                  : "bg-amber-400 shadow-amber-400/80"
+                userPlan.isPro ? "bg-emerald-400 shadow-emerald-400/80" : "bg-amber-400 shadow-amber-400/80"
               }`}></span>
               {userPlan.isPro ? "Live Notion API Request" : "Demo Notion API Request"}
             </h2>
@@ -432,7 +424,7 @@ export default function Home() {
           )}
         </div>
 
-        {/* PRICING PLANS */}
+        {/* PRICING GRID */}
         <div className="text-center space-y-1 pt-6">
           <h2 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(217,70,239,0.35)]">
             Select Your Pro Access Plan
