@@ -6,6 +6,7 @@ import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 export default function Home() {
   const { isSignedIn, user } = useUser();
   const [pageId, setPageId] = useState("3c8eb4df13cc80059700f7ea0db308c2");
+  const [customNotionKey, setCustomNotionKey] = useState("");
   const [loading, setLoading] = useState(false);
   const [notionData, setNotionData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
@@ -16,7 +17,7 @@ export default function Home() {
 
   const userEmail = isSignedIn && user?.primaryEmailAddress?.emailAddress 
     ? user.primaryEmailAddress.emailAddress 
-    : "suatmete9@gmail.com";
+    : "Guest Sandbox User";
 
   const userInitial = userEmail.charAt(0).toUpperCase() || "B";
 
@@ -101,22 +102,34 @@ export default function Home() {
   ];
 
   useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-    const savedPlan = localStorage.getItem("user_plan");
-    if (savedPlan) {
-      setUserPlan(JSON.parse(savedPlan));
+    const saved = localStorage.getItem("notion_saas_user_plan");
+    if (saved) {
+      try {
+        setUserPlan(JSON.parse(saved));
+      } catch {}
     }
+
+    const params = new URLSearchParams(window.location.search);
     if (params.get("payment") === "success") {
       const planName = params.get("plan") ? `${params.get("plan").toUpperCase()} Pro Active` : "Pro Active";
-      const generatedProKey = "LIVE_PRO_KEY_" + Math.random().toString(36).substring(2, 10).toUpperCase();
-      const newPlan = {
+      let existingKey = "LIVE_PRO_KEY_" + Math.random().toString(36).substring(2, 10).toUpperCase();
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.apiKey && parsed.apiKey.startsWith("LIVE_PRO_KEY_")) {
+            existingKey = parsed.apiKey;
+          }
+        } catch {}
+      }
+
+      const activePlan = {
         name: planName,
-        apiKey: generatedProKey,
+        apiKey: existingKey,
         isPro: true,
         freeLeft: 999999,
       };
-      setUserPlan(newPlan);
-      localStorage.setItem("user_plan", JSON.stringify(newPlan));
+      setUserPlan(activePlan);
+      localStorage.setItem("notion_saas_user_plan", JSON.stringify(activePlan));
     }
   }, []);
 
@@ -140,6 +153,7 @@ export default function Home() {
         body: JSON.stringify({
           pageId: pageId.trim(),
           apiKey: userPlan.apiKey,
+          customNotionKey: customNotionKey.trim() || undefined,
         }),
       });
 
@@ -163,7 +177,7 @@ export default function Home() {
   return (
     <main className="min-h-screen text-white flex flex-col items-center justify-between px-4 py-8 sm:px-12 bg-[#05010a] relative overflow-hidden font-sans">
       
-      {/* GEMINI MULTI-COLOR FLOWING AURORA & FLASHING KEYFRAMES */}
+      {/* GEMINI MULTI-COLOR FLOWING AURORA */}
       <style jsx global>{`
         @keyframes geminiWaveFlow {
           0% { background-position: 0% 50%; }
@@ -201,15 +215,9 @@ export default function Home() {
           animation: geminiWaveFlow 14s ease infinite;
         }
 
-        .gemini-orb-1 {
-          animation: geminiFlashGlow 7s ease-in-out infinite;
-        }
-        .gemini-orb-2 {
-          animation: geminiFlashGlow 9s ease-in-out infinite 2s;
-        }
-        .gemini-orb-3 {
-          animation: geminiFlashGlow 11s ease-in-out infinite 4s;
-        }
+        .gemini-orb-1 { animation: geminiFlashGlow 7s ease-in-out infinite; }
+        .gemini-orb-2 { animation: geminiFlashGlow 9s ease-in-out infinite 2s; }
+        .gemini-orb-3 { animation: geminiFlashGlow 11s ease-in-out infinite 4s; }
 
         .gemini-title-gradient {
           background: linear-gradient(
@@ -232,17 +240,14 @@ export default function Home() {
         }
       `}</style>
 
-      {/* BACKGROUND FLASHING AMBIENT LIGHTS */}
       <div className="fixed inset-0 gemini-ambient-canvas pointer-events-none -z-30"></div>
-      
-      {/* Floating Gemini Flashing Neon Orbs */}
       <div className="fixed top-[-10%] left-[10%] w-[550px] h-[550px] bg-gradient-to-tr from-cyan-500/30 via-indigo-600/35 to-blue-500/20 rounded-full blur-[140px] pointer-events-none -z-20 gemini-orb-1"></div>
       <div className="fixed top-[30%] right-[-5%] w-[600px] h-[600px] bg-gradient-to-bl from-fuchsia-600/35 via-purple-600/30 to-pink-500/30 rounded-full blur-[160px] pointer-events-none -z-20 gemini-orb-2"></div>
       <div className="fixed bottom-[-10%] left-[25%] w-[650px] h-[650px] bg-gradient-to-r from-emerald-500/25 via-amber-400/25 to-teal-500/30 rounded-full blur-[160px] pointer-events-none -z-20 gemini-orb-3"></div>
 
       <div className="w-full max-w-5xl space-y-8 z-10 mx-auto my-auto">
         
-        {/* GEMINI FLASHING SHIMMER HERO TITLE */}
+        {/* HEADER */}
         <div className="text-center space-y-2 pt-2">
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight gemini-title-gradient drop-shadow-[0_0_35px_rgba(192,132,252,0.4)]">
             Notion to Live JSON API Engine
@@ -252,7 +257,7 @@ export default function Home() {
           </p>
         </div>
 
-        {/* AUTH BOX */}
+        {/* AUTH STATUS */}
         <div className="max-w-xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_30px_rgba(147,51,234,0.15)] space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -260,7 +265,11 @@ export default function Home() {
               <p className="text-xs font-semibold text-cyan-300">{userEmail}</p>
             </div>
             <div className="flex items-center gap-2.5">
-              <span className="px-3.5 py-1 text-[11px] font-bold rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/40 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+              <span className={`px-3.5 py-1 text-[11px] font-bold rounded-full border shadow-sm ${
+                userPlan.isPro 
+                  ? "bg-emerald-500/20 text-emerald-300 border-emerald-400/40" 
+                  : "bg-amber-500/15 text-amber-300 border-amber-500/40"
+              }`}>
                 {userPlan.name}
               </span>
               {!isSignedIn ? (
@@ -271,7 +280,7 @@ export default function Home() {
                 </SignInButton>
               ) : (
                 <SignOutButton>
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 text-black font-extrabold flex items-center justify-center text-xs shadow-[0_0_15px_rgba(6,182,212,0.5)] cursor-pointer hover:scale-105 transition" title="Click to Sign Out">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 text-black font-extrabold flex items-center justify-center text-xs shadow-[0_0_15px_rgba(6,182,212,0.5)] cursor-pointer hover:scale-105 transition" title="Sign Out">
                     {userInitial}
                   </div>
                 </SignOutButton>
@@ -302,32 +311,45 @@ export default function Home() {
           </div>
         </div>
 
-        {/* DEMO NOTION API REQUEST */}
+        {/* DYNAMIC API PANEL */}
         <div className="max-w-4xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_35px_rgba(147,51,234,0.15)] space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-sm font-bold {userPlan.isPro ? "text-emerald-400 flex items-center gap-1.5" : "text-amber-400 flex items-center gap-1.5"} drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]">
-              ðŸŸ¡ Demo Notion API Request
+            <h2 className={`text-sm font-bold flex items-center gap-1.5 ${
+              userPlan.isPro ? "text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]" : "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]"
+            }`}>
+              {userPlan.isPro ? "🟢 Live Notion API Request" : "🟡 Demo Notion API Request"}
             </h2>
             <span className="text-[11px] text-gray-400">
               {userPlan.isPro ? "Production Endpoint (Unlimited Access)" : `Testing Sandbox (${userPlan.freeLeft} free left)`}
             </span>
           </div>
 
-          <div className="flex gap-2">
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={pageId}
+                onChange={(e) => setPageId(e.target.value)}
+                placeholder="Enter Notion Page / Database ID..."
+                className="w-full bg-[#070210] border border-purple-900/50 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400 transition"
+              />
+              <button
+                onClick={handleFetchJson}
+                disabled={loading}
+                className="px-7 py-2.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl text-xs whitespace-nowrap transition disabled:opacity-50 shadow-[0_0_20px_rgba(99,102,241,0.5)]"
+              >
+                {loading ? "Fetching..." : "Fetch JSON"}
+              </button>
+            </div>
+
+            {/* Custom Notion Token (For Tier-1 client private databases) */}
             <input
-              type="text"
-              value={pageId}
-              onChange={(e) => setPageId(e.target.value)}
-              placeholder="3c8eb4df13cc80059700f7ea0db308c2"
-              className="w-full bg-[#070210] border border-purple-900/50 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400 transition"
+              type="password"
+              value={customNotionKey}
+              onChange={(e) => setCustomNotionKey(e.target.value)}
+              placeholder="Optional: Enter your own Notion Integration Secret (secret_...)"
+              className="w-full bg-[#070210] border border-purple-900/30 rounded-xl px-4 py-1.5 text-[11px] text-gray-300 placeholder-gray-600 focus:outline-none focus:border-purple-500"
             />
-            <button
-              onClick={handleFetchJson}
-              disabled={loading}
-              className="px-7 py-2.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl text-xs whitespace-nowrap transition disabled:opacity-50 shadow-[0_0_20px_rgba(99,102,241,0.5)]"
-            >
-              {loading ? "Fetching..." : "Fetch JSON"}
-            </button>
           </div>
 
           <div className="space-y-1">
@@ -349,7 +371,7 @@ export default function Home() {
                 }}
                 className="px-4 py-2 bg-[#1f0b3b] hover:bg-[#2c1252] border border-purple-600/40 text-xs font-semibold rounded-xl whitespace-nowrap transition text-purple-200"
               >
-                {urlCopied ? "Copied! âœ…" : "Copy URL"}
+                {urlCopied ? "Copied! ✅" : "Copy URL"}
               </button>
             </div>
           </div>
@@ -372,7 +394,7 @@ export default function Home() {
                   }}
                   className="text-xs px-2.5 py-1 bg-emerald-950/80 border border-emerald-500 text-emerald-300 rounded font-mono hover:bg-emerald-900 transition"
                 >
-                  {jsonCopied ? "Copied! âœ…" : "ðŸ“‹ Copy JSON"}
+                  {jsonCopied ? "Copied! ✅" : "📋 Copy JSON"}
                 </button>
               </div>
               <div className="max-h-60 overflow-y-auto">
@@ -382,17 +404,16 @@ export default function Home() {
           )}
         </div>
 
-        {/* PRICING HEADER */}
+        {/* PRICING SECTION */}
         <div className="text-center space-y-1 pt-6">
           <h2 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(217,70,239,0.35)]">
             Select Your Pro Access Plan
           </h2>
           <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">
-            INSTANT ACTIVATION â€¢ HIGH PERFORMANCE LIVE ENDPOINTS â€¢ SECURE CHECKOUT
+            INSTANT ACTIVATION • HIGH PERFORMANCE LIVE ENDPOINTS • SECURE CHECKOUT
           </p>
         </div>
 
-        {/* 5 PRICING PLANS GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 items-stretch pb-6">
           {pricingPlans.map((plan) => (
             <div
@@ -416,7 +437,7 @@ export default function Home() {
                 <ul className="text-[11px] text-gray-300 space-y-1.5 text-left pl-1">
                   {plan.features.map((feat, idx) => (
                     <li key={idx} className="flex items-center gap-1.5">
-                      <span className="text-emerald-400 font-bold">âœ“</span> {feat}
+                      <span className="text-emerald-400 font-bold">✓</span> {feat}
                     </li>
                   ))}
                 </ul>
@@ -438,10 +459,10 @@ export default function Home() {
         <footer className="text-center text-[11px] text-gray-500 pt-2 pb-4 space-y-1">
           <div className="flex justify-center gap-4 text-gray-400 text-[11px]">
             <a href="#" className="hover:underline">Terms of Service & Refund Policy</a>
-            <span>â€¢</span>
+            <span>•</span>
             <a href="mailto:developerappwebsite@gmail.com" className="hover:underline">Developer Support</a>
           </div>
-          <p>Â© 2026 NotionEngine Inc. Built for technical teams and SaaS founders.</p>
+          <p>© 2026 NotionEngine Inc. Built for technical teams and SaaS founders.</p>
         </footer>
 
       </div>

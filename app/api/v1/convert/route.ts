@@ -8,14 +8,14 @@ export async function GET(req: Request) { return handleRequest(req); }
 async function handleRequest(req: Request) {
   try {
     const url = new URL(req.url);
-    let apiKey = req.headers.get("x-api-key") || url.searchParams.get("apiKey") || url.searchParams.get("apikey");
     let pageId = url.searchParams.get("pageId") || url.searchParams.get("pageid");
+    let customKey = url.searchParams.get("notionKey");
 
     if (req.method === "POST") {
       try {
         const body = await req.json();
-        if (!apiKey && body.apiKey) apiKey = body.apiKey;
-        if (!pageId && body.pageId) pageId = body.pageId;
+        if (body.pageId) pageId = body.pageId;
+        if (body.customNotionKey) customKey = body.customNotionKey;
       } catch {}
     }
 
@@ -24,10 +24,10 @@ async function handleRequest(req: Request) {
     }
 
     const cleanPageId = pageId.trim().replace(/-/g, "");
-    const token = process.env.NOTION_INTEGRATION_TOKEN || process.env.NOTION_API_KEY || process.env.NOTION_SECRET_KEY || "";
+    const token = customKey || process.env.NOTION_INTEGRATION_TOKEN || process.env.NOTION_API_KEY || process.env.NOTION_SECRET_KEY || "";
 
     if (!token) {
-      return NextResponse.json({ error: "NOTION_INTEGRATION_TOKEN is missing in environment variables." }, { status: 500 });
+      return NextResponse.json({ error: "No Notion API token provided or configured on server." }, { status: 500 });
     }
 
     const res = await fetch(`https://api.notion.com/v1/blocks/${cleanPageId}/children?page_size=100`, {
