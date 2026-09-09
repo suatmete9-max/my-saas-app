@@ -36,10 +36,10 @@ export default function Home() {
       duration: "Full access for 1 Day",
       features: ["Instant JSON API Key", "Unlimited Endpoints", "Edge Global Cache"],
       btnText: "BUY NOW",
-      borderClass: "border-[#00bcd4]/35 shadow-[0_0_20px_rgba(0,188,212,0.15)]",
-      badgeClass: "bg-[#00bcd4]/15 text-[#4dd0e1] border-[#00bcd4]/40",
-      priceClass: "text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.4)]",
-      btnClass: "bg-[#00bcd4] hover:bg-[#26c6da] text-black shadow-[0_0_15px_rgba(0,188,212,0.4)]",
+      borderClass: "border-cyan-400/50 shadow-[0_0_25px_rgba(6,182,212,0.25)] hover:shadow-[0_0_35px_rgba(6,182,212,0.5)]",
+      badgeClass: "bg-cyan-500/20 text-cyan-300 border-cyan-400/40",
+      priceClass: "text-cyan-300 drop-shadow-[0_0_15px_rgba(6,182,212,0.6)]",
+      btnClass: "bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-black font-extrabold shadow-[0_0_20px_rgba(6,182,212,0.5)]",
       link: "https://notion-api-engine.lemonsqueezy.com/checkout/buy/99623721-d577-47c8-b0ea-fed625e08e6f",
     },
     {
@@ -50,10 +50,10 @@ export default function Home() {
       duration: "Full access for 10 Days",
       features: ["Instant JSON API Key", "Unlimited Endpoints", "Edge Global Cache"],
       btnText: "BUY NOW",
-      borderClass: "border-[#00e676]/35 shadow-[0_0_20px_rgba(0,230,118,0.15)]",
-      badgeClass: "bg-[#00e676]/15 text-[#69f0ae] border-[#00e676]/40",
-      priceClass: "text-[#00e676] drop-shadow-[0_0_12px_rgba(0,230,118,0.4)]",
-      btnClass: "bg-[#00e676] hover:bg-[#69f0ae] text-black shadow-[0_0_15px_rgba(0,230,118,0.4)]",
+      borderClass: "border-emerald-400/50 shadow-[0_0_25px_rgba(16,185,129,0.25)] hover:shadow-[0_0_35px_rgba(16,185,129,0.5)]",
+      badgeClass: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40",
+      priceClass: "text-emerald-300 drop-shadow-[0_0_15px_rgba(16,185,129,0.6)]",
+      btnClass: "bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-black font-extrabold shadow-[0_0_20px_rgba(16,185,129,0.5)]",
       link: "https://notion-api-engine.lemonsqueezy.com/checkout/buy/2458b927-265f-4303-a5c2-1eb8cab49328",
     },
     {
@@ -64,10 +64,10 @@ export default function Home() {
       duration: "Full access for 1 Month",
       features: ["Instant JSON API Key", "Unlimited Endpoints", "Edge Global Cache"],
       btnText: "BUY NOW",
-      borderClass: "border-[#d500f9]/80 shadow-[0_0_35px_rgba(213,0,249,0.35)] scale-[1.03] z-10",
-      badgeClass: "bg-[#d500f9]/25 text-[#f06292] border-[#d500f9]/60 font-bold",
-      priceClass: "text-[#f50057] drop-shadow-[0_0_18px_rgba(245,0,87,0.5)]",
-      btnClass: "bg-gradient-to-r from-[#d500f9] to-[#7c4dff] hover:opacity-95 text-white shadow-[0_0_20px_rgba(213,0,249,0.5)]",
+      borderClass: "border-fuchsia-400/80 shadow-[0_0_40px_rgba(217,70,239,0.45)] hover:shadow-[0_0_55px_rgba(217,70,239,0.7)] scale-[1.04] z-10",
+      badgeClass: "bg-fuchsia-500/30 text-fuchsia-200 border-fuchsia-400/60 font-black",
+      priceClass: "text-fuchsia-300 drop-shadow-[0_0_22px_rgba(217,70,239,0.8)]",
+      btnClass: "bg-gradient-to-r from-fuchsia-500 via-pink-500 to-purple-600 hover:opacity-95 text-white font-black shadow-[0_0_30px_rgba(217,70,239,0.6)] animate-pulse",
       link: "https://notion-api-engine.lemonsqueezy.com/checkout/buy/7fc670da-7119-4663-ab28-4a12447f612a",
     },
     {
@@ -78,10 +78,10 @@ export default function Home() {
       duration: "Full access for 3 Months",
       features: ["Instant JSON API Key", "Unlimited Endpoints", "Edge Global Cache"],
       btnText: "BUY NOW",
-      borderClass: "border-[#ffab00]/40 shadow-[0_0_20px_rgba(255,171,0,0.15)]",
-      badgeClass: "bg-[#ffab00]/15 text-[#ffd54f] border-[#ffab00]/40",
-      priceClass: "text-[#ffab00] drop-shadow-[0_0_12px_rgba(255,171,0,0.4)]",
-      btnClass: "bg-[#ffab00] hover:bg-[#ffc107] text-black shadow-[0_0_15px_rgba(255,171,0,0.4)]",
+      borderClass: "border-amber-400/50 shadow-[0_0_25px_rgba(245,158,11,0.25)] hover:shadow-[0_0_35px_rgba(245,158,11,0.5)]",
+      badgeClass: "bg-amber-500/20 text-amber-300 border-amber-400/40",
+      priceClass: "text-amber-300 drop-shadow-[0_0_15px_rgba(245,158,11,0.6)]",
+      btnClass: "bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-black font-extrabold shadow-[0_0_20px_rgba(245,158,11,0.5)]",
       link: "https://notion-api-engine.lemonsqueezy.com/checkout/buy/a8c9588e-27ae-4505-90c8-4b9bea1fa37f",
     },
     {
@@ -92,10 +92,10 @@ export default function Home() {
       duration: "Full access for 1 Year",
       features: ["Instant JSON API Key", "Unlimited Endpoints", "Edge Global Cache"],
       btnText: "BUY NOW",
-      borderClass: "border-[#ff1744]/40 shadow-[0_0_20px_rgba(255,23,68,0.15)]",
-      badgeClass: "bg-[#ff1744]/15 text-[#ff8a80] border-[#ff1744]/40 font-bold",
-      priceClass: "text-[#ff1744] drop-shadow-[0_0_12px_rgba(255,23,68,0.4)]",
-      btnClass: "bg-[#ff1744] hover:bg-[#ff5252] text-white shadow-[0_0_15px_rgba(255,23,68,0.4)]",
+      borderClass: "border-rose-500/50 shadow-[0_0_25px_rgba(244,63,94,0.25)] hover:shadow-[0_0_35px_rgba(244,63,94,0.5)]",
+      badgeClass: "bg-rose-500/20 text-rose-300 border-rose-400/40 font-black",
+      priceClass: "text-rose-400 drop-shadow-[0_0_15px_rgba(244,63,94,0.6)]",
+      btnClass: "bg-gradient-to-r from-rose-500 via-red-600 to-amber-500 hover:opacity-95 text-white font-black shadow-[0_0_20px_rgba(244,63,94,0.5)]",
       link: "https://notion-api-engine.lemonsqueezy.com/checkout/buy/46871f9e-b885-4160-9779-5976532df643",
     },
   ];
@@ -154,46 +154,117 @@ export default function Home() {
     : "";
 
   return (
-    <main className="min-h-screen text-white flex flex-col items-center justify-between px-4 py-8 sm:px-12 bg-[#070110] relative overflow-hidden font-sans">
+    <main className="min-h-screen text-white flex flex-col items-center justify-between px-4 py-8 sm:px-12 bg-[#05010a] relative overflow-hidden font-sans">
       
-      {/* Exact Aurora background atmosphere matching Screenshot 1164 */}
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,30,190,0.3),rgba(255,255,255,0))] pointer-events-none -z-20"></div>
-      <div className="fixed top-12 left-1/4 w-[500px] h-[350px] bg-cyan-600/15 rounded-full blur-[140px] pointer-events-none -z-10"></div>
-      <div className="fixed top-1/3 right-1/4 w-[500px] h-[400px] bg-purple-700/20 rounded-full blur-[160px] pointer-events-none -z-10"></div>
-      <div className="fixed bottom-10 left-1/3 w-[600px] h-[350px] bg-rose-700/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
+      {/* GEMINI MULTI-COLOR FLOWING AURORA & FLASHING KEYFRAMES */}
+      <style jsx global>{`
+        @keyframes geminiWaveFlow {
+          0% { background-position: 0% 50%; }
+          25% { background-position: 50% 100%; }
+          50% { background-position: 100% 50%; }
+          75% { background-position: 50% 0%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        @keyframes geminiFlashGlow {
+          0%, 100% { opacity: 0.35; transform: scale(1) rotate(0deg); }
+          50% { opacity: 0.75; transform: scale(1.15) rotate(15deg); }
+        }
+
+        @keyframes textGeminiShimmer {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        .gemini-ambient-canvas {
+          background: linear-gradient(
+            -45deg,
+            #05010a,
+            #1e0836,
+            #0f172a,
+            #1e1b4b,
+            #3b0764,
+            #042f2e,
+            #31104b,
+            #172554,
+            #05010a
+          );
+          background-size: 350% 350%;
+          animation: geminiWaveFlow 14s ease infinite;
+        }
+
+        .gemini-orb-1 {
+          animation: geminiFlashGlow 7s ease-in-out infinite;
+        }
+        .gemini-orb-2 {
+          animation: geminiFlashGlow 9s ease-in-out infinite 2s;
+        }
+        .gemini-orb-3 {
+          animation: geminiFlashGlow 11s ease-in-out infinite 4s;
+        }
+
+        .gemini-title-gradient {
+          background: linear-gradient(
+            90deg,
+            #38bdf8,
+            #818cf8,
+            #c084fc,
+            #f472b6,
+            #fb7185,
+            #facc15,
+            #4ade80,
+            #2dd4bf,
+            #38bdf8
+          );
+          background-size: 250% auto;
+          color: transparent;
+          -webkit-background-clip: text;
+          background-clip: text;
+          animation: textGeminiShimmer 6s linear infinite;
+        }
+      `}</style>
+
+      {/* BACKGROUND FLASHING AMBIENT LIGHTS */}
+      <div className="fixed inset-0 gemini-ambient-canvas pointer-events-none -z-30"></div>
+      
+      {/* Floating Gemini Flashing Neon Orbs */}
+      <div className="fixed top-[-10%] left-[10%] w-[550px] h-[550px] bg-gradient-to-tr from-cyan-500/30 via-indigo-600/35 to-blue-500/20 rounded-full blur-[140px] pointer-events-none -z-20 gemini-orb-1"></div>
+      <div className="fixed top-[30%] right-[-5%] w-[600px] h-[600px] bg-gradient-to-bl from-fuchsia-600/35 via-purple-600/30 to-pink-500/30 rounded-full blur-[160px] pointer-events-none -z-20 gemini-orb-2"></div>
+      <div className="fixed bottom-[-10%] left-[25%] w-[650px] h-[650px] bg-gradient-to-r from-emerald-500/25 via-amber-400/25 to-teal-500/30 rounded-full blur-[160px] pointer-events-none -z-20 gemini-orb-3"></div>
 
       <div className="w-full max-w-5xl space-y-8 z-10 mx-auto my-auto">
         
-        {/* HERO TITLE */}
+        {/* GEMINI FLASHING SHIMMER HERO TITLE */}
         <div className="text-center space-y-2 pt-2">
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight bg-gradient-to-r from-[#40c4ff] via-[#b388ff] to-[#ff80ab] bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tight gemini-title-gradient drop-shadow-[0_0_35px_rgba(192,132,252,0.4)]">
             Notion to Live JSON API Engine
           </h1>
-          <p className="text-xs sm:text-sm text-gray-300 font-medium">
+          <p className="text-xs sm:text-sm font-semibold tracking-wide text-gray-300">
             Convert Notion databases into ultra-low latency JSON endpoints instantly.
           </p>
         </div>
 
         {/* AUTH BOX */}
-        <div className="max-w-xl mx-auto bg-[#10081d]/90 border border-purple-900/40 rounded-2xl p-6 backdrop-blur-xl shadow-2xl space-y-4">
+        <div className="max-w-xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_30px_rgba(147,51,234,0.15)] space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[11px] text-gray-400 font-medium">Authenticated Account:</p>
-              <p className="text-xs font-semibold text-blue-400">{userEmail}</p>
+              <p className="text-xs font-semibold text-cyan-300">{userEmail}</p>
             </div>
             <div className="flex items-center gap-2.5">
-              <span className="px-3.5 py-1 text-[11px] font-bold rounded-full bg-[#ffab00]/15 text-[#ffd54f] border border-[#ffab00]/30">
+              <span className="px-3.5 py-1 text-[11px] font-bold rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/40 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
                 {userPlan.name}
               </span>
               {!isSignedIn ? (
                 <SignInButton mode="modal">
-                  <div className="w-7 h-7 rounded-full bg-[#00bcd4] text-black font-extrabold flex items-center justify-center text-xs shadow-md cursor-pointer hover:opacity-90">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 text-black font-extrabold flex items-center justify-center text-xs shadow-[0_0_15px_rgba(6,182,212,0.5)] cursor-pointer hover:scale-105 transition">
                     {userInitial}
                   </div>
                 </SignInButton>
               ) : (
                 <SignOutButton>
-                  <div className="w-7 h-7 rounded-full bg-[#00bcd4] text-black font-extrabold flex items-center justify-center text-xs shadow-md cursor-pointer hover:opacity-90" title="Click to Sign Out">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 text-black font-extrabold flex items-center justify-center text-xs shadow-[0_0_15px_rgba(6,182,212,0.5)] cursor-pointer hover:scale-105 transition" title="Click to Sign Out">
                     {userInitial}
                   </div>
                 </SignOutButton>
@@ -210,7 +281,7 @@ export default function Home() {
                   setKeyCopied(true);
                   setTimeout(() => setKeyCopied(false), 2000);
                 }}
-                className="hover:text-white transition lowercase font-medium tracking-normal text-xs"
+                className="hover:text-white transition lowercase font-medium text-xs text-cyan-300"
               >
                 {keyCopied ? "copied!" : "Copy"}
               </button>
@@ -219,15 +290,15 @@ export default function Home() {
               type="text"
               readOnly
               value={userPlan.apiKey}
-              className="w-full bg-[#08020e] border border-purple-900/40 rounded-lg px-3 py-2 text-xs font-mono text-[#00e676] focus:outline-none"
+              className="w-full bg-[#070210] border border-purple-900/50 rounded-lg px-3 py-2 text-xs font-mono text-emerald-400 focus:outline-none shadow-inner"
             />
           </div>
         </div>
 
         {/* DEMO NOTION API REQUEST */}
-        <div className="max-w-4xl mx-auto bg-[#10081d]/90 border border-purple-900/40 rounded-2xl p-6 backdrop-blur-xl shadow-2xl space-y-4">
+        <div className="max-w-4xl mx-auto bg-[#10071f]/85 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-2xl shadow-[0_0_35px_rgba(147,51,234,0.15)] space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-sm font-bold text-[#ffc107] flex items-center gap-1.5">
+            <h2 className="text-sm font-bold text-amber-400 flex items-center gap-1.5 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]">
               🟡 Demo Notion API Request
             </h2>
             <span className="text-[11px] text-gray-400">
@@ -241,12 +312,12 @@ export default function Home() {
               value={pageId}
               onChange={(e) => setPageId(e.target.value)}
               placeholder="3c8eb4df13cc80059700f7ea0db308c2"
-              className="w-full bg-[#08020e] border border-purple-900/50 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500"
+              className="w-full bg-[#070210] border border-purple-900/50 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400 transition"
             />
             <button
               onClick={handleFetchJson}
               disabled={loading}
-              className="px-7 py-2.5 bg-[#1976d2] hover:bg-[#1565c0] text-white font-bold rounded-xl text-xs whitespace-nowrap transition disabled:opacity-50 shadow-md"
+              className="px-7 py-2.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl text-xs whitespace-nowrap transition disabled:opacity-50 shadow-[0_0_20px_rgba(99,102,241,0.5)]"
             >
               {loading ? "Fetching..." : "Fetch JSON"}
             </button>
@@ -261,7 +332,7 @@ export default function Home() {
                 type="text"
                 readOnly
                 value={dynamicApiUrl}
-                className="w-full bg-[#08020e] border border-purple-900/50 rounded-xl px-3 py-2 text-xs font-mono text-[#40c4ff] focus:outline-none"
+                className="w-full bg-[#070210] border border-purple-900/50 rounded-xl px-3 py-2 text-xs font-mono text-cyan-300 focus:outline-none shadow-inner"
               />
               <button
                 onClick={() => {
@@ -269,7 +340,7 @@ export default function Home() {
                   setUrlCopied(true);
                   setTimeout(() => setUrlCopied(false), 2000);
                 }}
-                className="px-4 py-2 bg-[#1b0e30] hover:bg-[#251342] border border-purple-800/40 text-xs font-semibold rounded-xl whitespace-nowrap transition"
+                className="px-4 py-2 bg-[#1f0b3b] hover:bg-[#2c1252] border border-purple-600/40 text-xs font-semibold rounded-xl whitespace-nowrap transition text-purple-200"
               >
                 {urlCopied ? "Copied! ✅" : "Copy URL"}
               </button>
@@ -277,28 +348,28 @@ export default function Home() {
           </div>
 
           {error && (
-            <div className="p-3 bg-red-950/60 border border-red-600/70 text-red-200 text-xs rounded-xl">
+            <div className="p-3 bg-red-950/70 border border-red-500 text-red-200 text-xs rounded-xl shadow-[0_0_15px_rgba(239,68,68,0.3)]">
               {error}
             </div>
           )}
 
           {notionData && (
-            <div className="bg-[#08020e] border border-[#00e676]/40 rounded-xl p-4 space-y-2 mt-2">
+            <div className="bg-[#070210] border border-emerald-500/50 rounded-xl p-4 space-y-2 mt-2 shadow-[0_0_25px_rgba(16,185,129,0.2)]">
               <div className="flex justify-between items-center border-b border-gray-800 pb-2">
-                <span className="text-[11px] font-mono text-[#00e676] font-bold">RESPONSE DATA (JSON)</span>
+                <span className="text-[11px] font-mono text-emerald-400 font-bold">RESPONSE DATA (JSON)</span>
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(JSON.stringify(notionData, null, 2));
                     setJsonCopied(true);
                     setTimeout(() => setJsonCopied(false), 2000);
                   }}
-                  className="text-xs px-2.5 py-1 bg-[#00e676]/10 border border-[#00e676] text-[#00e676] rounded font-mono hover:bg-[#00e676]/20 transition"
+                  className="text-xs px-2.5 py-1 bg-emerald-950/80 border border-emerald-500 text-emerald-300 rounded font-mono hover:bg-emerald-900 transition"
                 >
                   {jsonCopied ? "Copied! ✅" : "📋 Copy JSON"}
                 </button>
               </div>
               <div className="max-h-60 overflow-y-auto">
-                <pre className="text-xs font-mono text-[#00e676]">{JSON.stringify(notionData, null, 2)}</pre>
+                <pre className="text-xs font-mono text-emerald-300">{JSON.stringify(notionData, null, 2)}</pre>
               </div>
             </div>
           )}
@@ -306,7 +377,7 @@ export default function Home() {
 
         {/* PRICING HEADER */}
         <div className="text-center space-y-1 pt-6">
-          <h2 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-[#40c4ff] via-[#b388ff] to-[#ff80ab] bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(217,70,239,0.35)]">
             Select Your Pro Access Plan
           </h2>
           <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">
@@ -319,7 +390,7 @@ export default function Home() {
           {pricingPlans.map((plan) => (
             <div
               key={plan.id}
-              className={`bg-[#10081d]/90 border ${plan.borderClass} rounded-2xl p-5 flex flex-col justify-between text-center backdrop-blur-xl shadow-xl transition-all duration-300 hover:-translate-y-1`}
+              className={`bg-[#10071f]/85 border ${plan.borderClass} rounded-2xl p-5 flex flex-col justify-between text-center backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1.5`}
             >
               <div className="space-y-3">
                 <span className={`inline-block text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${plan.badgeClass}`}>
@@ -338,7 +409,7 @@ export default function Home() {
                 <ul className="text-[11px] text-gray-300 space-y-1.5 text-left pl-1">
                   {plan.features.map((feat, idx) => (
                     <li key={idx} className="flex items-center gap-1.5">
-                      <span className="text-[#00e676] font-bold">✓</span> {feat}
+                      <span className="text-emerald-400 font-bold">✓</span> {feat}
                     </li>
                   ))}
                 </ul>
